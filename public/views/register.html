@@ -10,6 +10,16 @@
 
 <body class="subpage">
 
+	<script>
+
+		const session = localStorage.getItem('JWT-costuras-stella');
+
+		if (session) {
+			window.location.href = '/profile';
+		}
+
+	</script>
+
 	<header id="header" class="alt">
 		<div class="logo"><a href="/">Costuras <span>Stella</span></a></div>
 		<a href="#menu"><span>Menú</span></a>
@@ -19,10 +29,10 @@
 		<ul class="links">
 			<li><a href="/">Inicio</a></li>
 			<li><a href="/catalogue">Catálogo</a></li>
-			<li><a href="/orders">Pedidos</a></li>
-			<li><a href="/login">Ingresar</a></li>
-			<li><a href="/profile">Perfil</a></li>
-			<li><a href="/shopping-cart">Carrito de Compras</a></li>
+			<li id="linkOrders"><a href="/orders">Pedidos</a></li>
+			<li id="linkLogin"><a href="/login">Ingresar</a></li>
+			<li id="linkProfile"><a href="/profile">Perfil</a></li>
+			<li id="linkShoppingCart"><a href="#">Carrito de Compras</a></li>
 		</ul>
 	</nav>
 
@@ -32,28 +42,28 @@
 				<header>
 					<h2>Registrarse</h2>
 				</header>
-				<div class="content">
+				<div class="content mt-4">
 
 					<form method="post" action="#">
 						<div class="row uniform">
 							<div class="6u$ 12u$(xsmall)">
-								<input style="color: white;" type="text" name="name" id="name" value=""
+								<input style="color: white;" type="text" name="name" id="inputName" value=""
 									placeholder="Nombre" />
 							</div>
 							<div class="6u$ 12u$(xsmall)">
-								<input style="color: white;" type="email" name="email" id="email" value=""
+								<input style="color: white;" type="email" name="email" id="inputEmail" value=""
 									placeholder="Email" />
 							</div>
 							<div class="6u$ 12u$(xsmall)">
-								<input style="color: white;" type="password" name="password" id="password" value=""
+								<input style="color: white;" type="password" name="password" id="inputPassword" value=""
 									placeholder="Contraseña" />
 							</div>
 							<div class="6u$ 12u$(xsmall)">
-								<input style="color: white;" type="password" name="password2" id="password2" value=""
-									placeholder="Repetir Contraseña" />
+								<input style="color: white;" type="password" name="password2" id="inputPassword2"
+									value="" placeholder="Repetir Contraseña" />
 							</div>
 							<div class="6u$ 12u$(xsmall)">
-								<a href="#" class="button special "> Registrarse </a>
+								<a id="btnSingin" href="#" class="button special "> Registrarse </a>
 							</div>
 
 
@@ -105,9 +115,117 @@
 	<script src="assets/js/skel.min.js"></script>
 	<script src="assets/js/util.js"></script>
 	<script src="assets/js/main.js"></script>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-	
+	<script>
+
+		//li
+		const linkOrders = document.querySelector('#linkOrders');
+		const linkProfile = document.querySelector('#linkProfile');
+		const linkShoppingCart = document.querySelector('#linkShoppingCart');
+		const linkLogin = document.querySelector('#linkLogin');
+
+		//inputs
+		const inputName = document.querySelector('#inputName');
+		const inputEmail = document.querySelector('#inputEmail');
+		const inputPassword = document.querySelector('#inputPassword');
+		const inpuPassword2 = document.querySelector('#inpuPassword2');
+
+		//buttons
+		const btnSingin = document.querySelector('#btnSingin');
+
+
+		//mostaron links dependiendo de si está logueado o no
+		if (!session) {
+			linkOrders.style.display = 'none';
+			linkProfile.style.display = 'none';
+			linkShoppingCart.style.display = 'none';
+		} else {
+			linkLogin.style.display = 'none';
+		}
+
+		//validamos campos
+
+		btnSingin.addEventListener('click', async () => {
+
+			if (inputName.value.length < 8) {
+				return alert('Por favor ingrese un Nombre válido');
+			}
+
+			if (inputEmail.value.length < 8) {
+				return alert('Por favor ingrese un Email válido');
+			}
+
+			if (inputPassword.value.length < 8) {
+				return alert('Por favor ingrese una Contraseña válida');
+			}
+
+			if (inputPassword.value !== inputPassword2.value) {
+				return alert('Las contrsaeñas no coinciden');
+			}
+
+			//consumir api de creación de usuario
+			const settingsCrearUsuarios = {
+
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					nombre: inputName.value,
+					correo: inputEmail.value,
+					password: inputPassword.value,
+					rol: 'USER_ROLE',
+				})
+
+			}
+
+			try {
+				const data = await fetch('https://rest-server-crud-usuarios.herokuapp.com/api/usuarios', settingsCrearUsuarios);
+				const { usuario } = await data.json();
+			} catch (error) {
+				console.log(error);
+			}
+
+			//consumimos la api de login y redirijimos
+			const settingsLogin = {
+
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					correo: inputEmail.value,
+					password: inputPassword.value
+				})
+
+			}
+
+			try {
+				const data = await fetch('https://rest-server-crud-usuarios.herokuapp.com/api/auth/login', settingsLogin);
+
+				const { token } = await data.json();
+
+				if (token) {
+					localStorage.setItem('JWT-costuras-stella', JSON.stringify(token));
+					window.location.href = '/profile';
+				} else {
+					alert('Credenciales Incorrectas');
+				}
+
+
+
+			} catch (error) {
+				console.log(error);
+			}
+
+		});
+
+	</script>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 </body>
 

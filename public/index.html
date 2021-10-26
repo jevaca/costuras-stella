@@ -20,10 +20,10 @@
 				<ul class="links">
 					<li><a href="/">Inicio</a></li>
 					<li><a href="/catalogue">Catálogo</a></li>
-					<li><a href="/orders">Pedidos</a></li>
-					<li><a href="/login">Ingresar</a></li>
-					<li><a href="/profile">Perfil</a></li>
-					<li><a href="/shopping-cart">Carrito de Compras</a></li>
+					<li id="linkOrders"><a href="/orders">Pedidos</a></li>
+					<li id="linkLogin"><a href="/login">Ingresar</a></li>
+					<li id="linkProfile"><a href="/profile">Perfil</a></li>
+					<li id="linkShoppingCart"><a href="/shopping-cart">Carrito de Compras</a></li>
 				</ul>
 			</nav>
 
@@ -152,6 +152,25 @@
 			<script src="assets/js/skel.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+
+			<script>
+
+				const linkOrders = document.querySelector('#linkOrders');
+				const linkProfile = document.querySelector('#linkProfile');
+				const linkShoppingCart = document.querySelector('#linkShoppingCart');
+				const linkLogin = document.querySelector('#linkLogin');
+
+				const session = localStorage.getItem('JWT-costuras-stella');
+
+				if( !session ){
+					linkOrders.style.display = 'none';
+					linkProfile.style.display = 'none';
+					linkShoppingCart.style.display = 'none';
+				} else {
+					linkLogin.style.display = 'none';
+				}
+
+			</script>
 
 	</body>
 </html>
