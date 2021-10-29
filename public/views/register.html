@@ -32,7 +32,7 @@
 			<li id="linkOrders"><a href="/orders">Pedidos</a></li>
 			<li id="linkLogin"><a href="/login">Ingresar</a></li>
 			<li id="linkProfile"><a href="/profile">Perfil</a></li>
-			<li id="linkShoppingCart"><a href="#">Carrito de Compras</a></li>
+			<li id="linkShoppingCart"><a href="/shopping-cart">Carrito de Compras</a></li>
 		</ul>
 	</nav>
 
@@ -115,6 +115,7 @@
 	<script src="assets/js/skel.min.js"></script>
 	<script src="assets/js/util.js"></script>
 	<script src="assets/js/main.js"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 	<script>
 
@@ -148,19 +149,19 @@
 		btnSingin.addEventListener('click', async () => {
 
 			if (inputName.value.length < 8) {
-				return alert('Por favor ingrese un Nombre válido');
+				return swal('Nombre no válido', 'Por favor ingrese un nombre válido', 'error');
 			}
 
 			if (inputEmail.value.length < 8) {
-				return alert('Por favor ingrese un Email válido');
+				return swal('Email no válido', 'Por favor ingrese un email válido', 'error');
 			}
 
 			if (inputPassword.value.length < 8) {
-				return alert('Por favor ingrese una Contraseña válida');
+				return swal('Contraseña no válida', 'Por favor ingrese una contraseña válida', 'error');
 			}
 
 			if (inputPassword.value !== inputPassword2.value) {
-				return alert('Las contrsaeñas no coinciden');
+				return swal('Las Contraseñas no Coinciden', 'Por favor verifica que las contraseñas coincidan', 'error');
 			}
 
 			//consumir api de creación de usuario
@@ -211,7 +212,7 @@
 					localStorage.setItem('JWT-costuras-stella', JSON.stringify(token));
 					window.location.href = '/profile';
 				} else {
-					alert('Credenciales Incorrectas');
+					swal('Error', 'El usuario ya existe', 'error');
 				}
 
 

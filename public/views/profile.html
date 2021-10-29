@@ -149,6 +149,7 @@
 		btnLogout.addEventListener('click', () => { //el segundo parametro es una callback
 
 			localStorage.removeItem('JWT-costuras-stella');
+			localStorage.removeItem('shoppingCart');
 
 			window.location.href = '/';
 

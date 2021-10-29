@@ -1,114 +1,197 @@
 <!DOCTYPE HTML>
 <html>
-	<head>
-		<title>Carrito de Compras</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	<body class="subpage">
 
-		<script>
+<head>
+	<title>Carrito de Compras</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+</head>
 
-			const session = localStorage.getItem('JWT-costuras-stella');
-	
-			if (!session) {
-				window.location.href = '/login';
-			}
-	
-		</script>
+<body class="subpage">
 
-			<header id="header" class="alt">
-				<div class="logo"><a href="/">Costuras <span>Stella</span></a></div>
-				<a href="#menu"><span>Menú</span></a>
-			</header>
+	<script>
 
-			<nav id="menu">
-				<ul class="links">
-					<li><a href="/">Inicio</a></li>
-					<li><a href="/catalogue">Catálogo</a></li>
-					<li id="linkOrders"><a href="/orders">Pedidos</a></li>
-					<li id="linkLogin"><a href="/login">Ingresar</a></li>
-					<li id="linkProfile"><a href="/profile">Perfil</a></li>
-					<li id="linkShoppingCart"><a href="#">Carrito de Compras</a></li>
+		const session = localStorage.getItem('JWT-costuras-stella');
+
+		if (!session) {
+			window.location.href = '/login';
+		}
+
+	</script>
+
+	<header id="header" class="alt">
+		<div class="logo"><a href="/">Costuras <span>Stella</span></a></div>
+		<a href="#menu"><span>Menú</span></a>
+	</header>
+
+	<nav id="menu">
+		<ul class="links">
+			<li><a href="/">Inicio</a></li>
+			<li><a href="/catalogue">Catálogo</a></li>
+			<li id="linkOrders"><a href="/orders">Pedidos</a></li>
+			<li id="linkLogin"><a href="/login">Ingresar</a></li>
+			<li id="linkProfile"><a href="/profile">Perfil</a></li>
+			<li id="linkShoppingCart"><a href="#">Carrito de Compras</a></li>
+		</ul>
+	</nav>
+
+	<section id="post" class="wrapper bg-img" data-bg="banner7.jpg">
+		<div class="inner">
+			<article class="box">
+				<header>
+					<h2 align="center">Carrito de Compras</h2>
+				</header>
+				<div class="content">
+					<p style="text-align: center;">A continuación encontrará un listado con todos los productos que ha
+						incorporado a su carrito de compras. Al hacer click sobre el botón "Comprar" se le
+						redireccionará a una página donde se dará de alta su pedido y se le proporcionará la información
+						de contacto del proveedor para que pueda efectuar el pago correspondiente.</p>
+
+					<div class="table-wrapper">
+						<table>
+							<thead>
+								<tr>
+									<th>Índice</th>
+									<th>Producto</th>
+									<th>Talle</th>
+									<th>Precio</th>
+								</tr>
+							</thead>
+							<tbody id="tbodyProductos">
+							</tbody>
+							<tfoot id="tfootProductos">
+							</tfoot>
+						</table>
+					</div>
+				</div>
+				<footer>
+					<a href="/contact-information" class="button special">Comprar</a>
+				</footer>
+			</article>
+		</div>
+	</section>
+
+	<footer id="footer">
+		<div class="inner">
+
+			<h2>Información de Contacto</h2>
+
+			<form action="#" method="post">
+
+				<div class="field half first">
+					<label for="name">Nombre</label>
+					<input name="name" id="name" type="text" placeholder="Nombre">
+				</div>
+				<div class="field half">
+					<label for="email">Email</label>
+					<input name="email" id="email" type="email" placeholder="Email">
+				</div>
+				<div class="field">
+					<label for="message">Mensaje</label>
+					<textarea name="message" id="message" rows="6" placeholder="Mensaje"></textarea>
+				</div>
+				<ul class="actions">
+					<li><input value="Enviar" class="button alt" type="submit"></li>
 				</ul>
-			</nav>
+			</form>
 
-			<section id="post" class="wrapper bg-img" data-bg="banner7.jpg">
-				<div class="inner">
-					<article class="box">
-						<header>
-							<h2>Carrito de Compras</h2>
-						</header>
-						<div class="content">
-							<p>Costuras Stella es un emprendimiento enfocado en la creación de artículos y prendas que te acompañan en el día a día. Nos encontramos en Chacras de Coria - Luján de Cuyo (Provincia de Mendoza). Contamos con más de 30 años de experiencia en la confección de indumentaria.</p>
+			<ul class="icons">
+				<li><a href="#" class="icon round fa-twitter"><span class="label">Twitter</span></a></li>
+				<li><a href="#" class="icon round fa-facebook"><span class="label">Facebook</span></a></li>
+				<li><a href="#" class="icon round fa-instagram"><span class="label">Instagram</span></a></li>
+			</ul>
+		</div>
+	</footer>
 
-							<p>Penatibus vestibulum ullamcorper diam commodo volutpat at a sodales dis id ut condimentum a arcu at nostra pretium urna suspendisse. Maecenas commodo adipiscing ad curabitur a a risus pulvinar habitant a et integer volutpat mi nullam curabitur a adipiscing nullam in bibendum vel cras scelerisque. Morbi a euismod litora dui nunc in pretium sodales ante dis dui natoque adipiscing a. Augue imperdiet dignissim adipiscing justo accumsan adipiscing vestibulum adipiscing fames class ad rutrum sociosqu ad auctor sodales dis mollis. Ac euismod enim ad viverra dui auctor at integer inceptos parturient mi convallis aliquet iaculis ad diam.</p>
-						</div>
-						<footer>
-							<ul class="actions">
-								<li><a href="/to-start" class="button alt icon fa-chevron-left"><span class="label">Previous</span></a></li>
-								<li><a href="/products" class="button alt icon fa-chevron-right"><span class="label">Next</span></a></li>
-							</ul>
-						</footer>
-					</article>
-				</div>
-			</section>
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/skel.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+	
 
-			<footer id="footer">
-				<div class="inner">
+	<script>
+		const linkOrders = document.querySelector('#linkOrders');
+		const linkProfile = document.querySelector('#linkProfile');
+		const linkShoppingCart = document.querySelector('#linkShoppingCart');
+		const linkLogin = document.querySelector('#linkLogin');
 
-					<h2>Información de Contacto</h2>
+		if (!session) {
+			linkOrders.style.display = 'none';
+			linkProfile.style.display = 'none';
+			linkShoppingCart.style.display = 'none';
+		} else {
+			linkLogin.style.display = 'none';
+		}
 
-					<form action="#" method="post">
 
-						<div class="field half first">
-							<label for="name">Nombre</label>
-							<input name="name" id="name" type="text" placeholder="Nombre">
-						</div>
-						<div class="field half">
-							<label for="email">Email</label>
-							<input name="email" id="email" type="email" placeholder="Email">
-						</div>
-						<div class="field">
-							<label for="message">Mensaje</label>
-							<textarea name="message" id="message" rows="6" placeholder="Mensaje"></textarea>
-						</div>
-						<ul class="actions">
-							<li><input value="Enviar" class="button alt" type="submit"></li>
-						</ul>
-					</form>
+		const cargarCompontes = () => {
 
-					<ul class="icons">
-						<li><a href="#" class="icon round fa-twitter"><span class="label">Twitter</span></a></li>
-						<li><a href="#" class="icon round fa-facebook"><span class="label">Facebook</span></a></li>
-						<li><a href="#" class="icon round fa-instagram"><span class="label">Instagram</span></a></li>
-					</ul>
-				</div>
-			</footer>
+			const tbody = document.querySelector('#tbodyProductos');
+			const tfoot = document.querySelector('#tfootProductos');
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+			const carrito = JSON.parse(localStorage.getItem('shoppingCart'));
 
-			<script>
-				const linkOrders = document.querySelector('#linkOrders');
-				const linkProfile = document.querySelector('#linkProfile');
-				const linkShoppingCart = document.querySelector('#linkShoppingCart');
-				const linkLogin = document.querySelector('#linkLogin');
+			let tbodyHtml = '';
+			let total = 0;
+			let producto;
 
-				if( !session ){
-					linkOrders.style.display = 'none';
-					linkProfile.style.display = 'none';
-					linkShoppingCart.style.display = 'none';
-				} else {
-					linkLogin.style.display = 'none';
-				}
-			</script>
+			for (let i = 0; i < carrito.length; i++) {
 
-	</body>
+				tbodyHtml += ` <tr>
+								<td>${i+1}</td>
+								<td>${carrito[i].nombre}</td>
+								<td>${carrito[i].talle}</td>
+								<td>${carrito[i].precio}</td>
+								<td><a href="/shopping-cart?delete=${i}" class="button alt small">Borrar</a></td>
+							  </tr>`;
+
+				total += carrito[i].precio;
+			}
+
+
+
+			const tfootHtml = `	<tr>
+									<td colspan="1"></td>
+									<td>TOTAL</td>
+									<td colspan="1"></td>
+									<td>${total}</td>
+								</tr>`;
+
+			tbody.innerHTML = tbodyHtml;
+			tfoot.innerHTML = tfootHtml;
+
+
+		}
+
+		const getParameterByName = (name) => {
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			let regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+				results = regex.exec(location.search);
+			return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+
+		let productoEliminado = getParameterByName('delete');
+
+		if ( productoEliminado ) {
+
+			let arr = JSON.parse(localStorage.getItem('shoppingCart'));
+
+			arr.splice(productoEliminado, 1);
+			
+			localStorage.setItem('shoppingCart', JSON.stringify(arr));
+
+			window.location.href = '/shopping-cart';
+		}
+
+	
+		cargarCompontes();
+
+	</script>
+
+</body>
+
 </html>

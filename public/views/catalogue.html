@@ -22,7 +22,7 @@
 			<li id="linkOrders"><a href="/orders">Pedidos</a></li>
 			<li id="linkLogin"><a href="/login">Ingresar</a></li>
 			<li id="linkProfile"><a href="/profile">Perfil</a></li>
-			<li id="linkShoppingCart"><a href="#">Carrito de Compras</a></li>
+			<li id="linkShoppingCart"><a href="/shopping-cart">Carrito de Compras</a></li>
 		</ul>
 	</nav>
 
@@ -43,112 +43,12 @@
 				</div>
 				<div align="center" class="row">
 
-					<div class="row row-cols-1 row-cols-md-3 g-4 ms-1">
-						<div class="col">
-							<div class="card text-white bg-dark ">
-								<img src="../images/cartera01.png" class="card-img-top" alt="...">
-								<div class="card-body">
-									<h5 class="card-title">Card title</h5>
-									<p class="card-text">This is a longer card with supporting text below as a natural
-										lead-in to additional content. This content is a little bit longer.</p>
-									<a href="#" class="button special small">Ver más</a>
-								</div>
-							</div>
-						</div>
-						<div class="col">
-							<div class="card text-white bg-dark ">
-								<img src="../images/cartera01.png" class="card-img-top" alt="...">
-								<div class="card-body">
-									<h5 class="card-title">Card title</h5>
-									<p class="card-text">This is a longer card with supporting text below as a natural
-										lead-in to additional content. This content is a little bit longer.</p>
-									<a href="#" class="button special small">Ver más</a>
-								</div>
-							</div>
-						</div>
-						<div class="col">
-							<div class="card text-white bg-dark ">
-								<img src="../images/cartera01.png" class="card-img-top" alt="...">
-								<div class="card-body">
-									<h5 class="card-title">Card title</h5>
-									<p class="card-text">This is a longer card with supporting text below as a natural
-										lead-in to additional content. This content is a little bit longer.</p>
-									<a href="#" class="button special small">Ver más</a>
-								</div>
-							</div>
-						</div>
-						<div class="col">
-							<div class="card text-white bg-dark ">
-								<img src="../images/cartera01.png" class="card-img-top" alt="...">
-								<div class="card-body">
-									<h5 class="card-title">Card title</h5>
-									<p class="card-text">This is a longer card with supporting text below as a natural
-										lead-in to additional content. This content is a little bit longer.</p>
-									<a href="#" class="button special small">Ver más</a>
-								</div>
-							</div>
-						</div>
-						<div class="col">
-							<div class="card text-white bg-dark ">
-								<img src="../images/cartera01.png" class="card-img-top" alt="...">
-								<div class="card-body">
-									<h5 class="card-title">Card title</h5>
-									<p class="card-text">This is a longer card with supporting text below as a natural
-										lead-in to additional content. This content is a little bit longer.</p>
-									<a href="#" class="button special small">Ver más</a>
-								</div>
-							</div>
-						</div>
-						<div class="col">
-							<div class="card text-white bg-dark ">
-								<img src="../images/cartera01.png" class="card-img-top" alt="...">
-								<div class="card-body">
-									<h5 class="card-title">Card title</h5>
-									<p class="card-text">This is a longer card with supporting text below as a natural
-										lead-in to additional content. This content is a little bit longer.</p>
-									<a href="#" class="button special small">Ver más</a>
-								</div>
-							</div>
-						</div>
-						<div class="col">
-							<div class="card text-white bg-dark ">
-								<img src="../images/cartera01.png" class="card-img-top" alt="...">
-								<div class="card-body">
-									<h5 class="card-title">Card title</h5>
-									<p class="card-text">This is a longer card with supporting text below as a natural
-										lead-in to additional content. This content is a little bit longer.</p>
-									<a href="#" class="button special small">Ver más</a>
-								</div>
-							</div>
-						</div>
-						<div class="col">
-							<div class="card text-white bg-dark ">
-								<img src="../images/cartera01.png" class="card-img-top" alt="...">
-								<div class="card-body">
-									<h5 class="card-title">Card title</h5>
-									<p class="card-text">This is a longer card with supporting text below as a natural
-										lead-in to additional content. This content is a little bit longer.</p>
-									<a href="#" class="button special small">Ver más</a>
-								</div>
-							</div>
-						</div>
-						<div class="col">
-							<div class="card text-white bg-dark ">
-								<img src="../images/cartera01.png" class="card-img-top" alt="...">
-								<div class="card-body">
-									<h5 class="card-title">Card title</h5>
-									<p class="card-text">This is a longer card with supporting text below as a natural
-										lead-in to additional content. This content is a little bit longer.</p>
-									<a href="#" class="button special small">Ver más</a>
-								</div>
-							</div>
-						</div>
-
+					<div id="divCards" class="row row-cols-1 row-cols-md-3 g-4 ms-1">
 					</div>
 					<footer>
 						<nav id="navPaginas">
 							<ul class="pagination mt-5 justify-content-center" id="ulPaginas">
-								
+
 							</ul>
 						</nav>
 					</footer>
@@ -205,6 +105,7 @@
 		const session = localStorage.getItem('JWT-costuras-stella');
 
 		let totalProductos;
+		let arrProductos;
 
 		if (!session) {
 			linkOrders.style.display = 'none';
@@ -215,11 +116,12 @@
 		}
 
 		//consumir api getProductos
-		const getProductos = async () => {
+		const getProductos = async (limite = 9, desde = 0) => {
 			try {
-				const data = await fetch('https://rest-server-crud-usuarios.herokuapp.com/api/productos?limite=50&desde=0');
-				const { total } = await data.json();
+				const data = await fetch(`https://rest-server-crud-usuarios.herokuapp.com/api/productos?limite=${limite}&desde=${desde}`);
+				const { productos, total } = await data.json();
 				totalProductos = total;
+				arrProductos = productos;
 
 			} catch (error) {
 				console.log(error);
@@ -231,7 +133,6 @@
 
 		//obtener el total de productos y obtener numero de páginas a crear
 		const paginar = async () => {
-			await getProductos();
 			const aux = totalProductos / 9;
 			let numeroPaginas = Number.parseInt(aux);
 			let pagina = 1;
@@ -246,23 +147,73 @@
 											class="label">Previous</span></a></li>`;
 
 			for (let i = 1; i <= numeroPaginas; i++) {
-				liPage+=`<li class=""><a class="button special" href="#">${i}</a></li>`;
+				liPage += `<li class=""><a class="button special" href="/catalogue?page=${i}">${i}</a></li>`;
 			}
 
-			liPage+=`<li><a href="#" class="button alt icon fa-chevron-right"><span class="label">Next</span></a>
+			liPage += `<li><a href="#" class="button alt icon fa-chevron-right"><span class="label">Next</span></a>
 									</li>`;
 
 			ulPaginas.innerHTML = liPage;
 
 		}
 
-		paginar();
+		const llenarCards = (productos) => {
 
+			const divCards = document.querySelector('#divCards');
 
+			let cardsHtml = '';
 
-		//crear la paginación
+			productos.forEach(producto => {
 
+				if( !producto.img ){
 
+					producto.img = 'https://res.cloudinary.com/dda9lhkn8/image/upload/v1635474214/tofzsuek2n2y9w7qe2s5.jpg';
+
+				}
+
+				cardsHtml += `<div class="col">
+							<div class="card text-white bg-dark ">
+								<img src="${producto.img}" class="card-img-top" alt="..." width="275" height="275">
+								<div class="card-body">
+									<h5 class="card-title">${producto.nombre}</h5>
+									<p class="card-text">$ ${producto.precio}.00 ARS</p>
+									<a href="/product?id=${producto._id}" class="button special small">Ver más</a>
+								</div>
+							</div>
+						</div>`;
+
+			});
+
+			divCards.innerHTML = cardsHtml;
+
+		}
+
+		const cargarCompontes = async () => {
+
+			let desde = 0;
+
+			const pagina = getParameterByName('page');
+
+			if( pagina ){
+
+				desde =  9 * ( pagina -1 )
+
+			}
+
+			await getProductos( undefined , desde );
+			await paginar();
+			await llenarCards(arrProductos);
+
+		}
+
+		const getParameterByName = (name) => {
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			let regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+				results = regex.exec(location.search);
+			return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+
+		cargarCompontes();
 
 
 	</script>

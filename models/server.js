@@ -18,12 +18,14 @@ class Server {
             home: '/',
             login: '/login',
             orders: '/orders',
+            product: '/product',
             products: '/products',
             profile: '/profile',
             register: '/register',
             shoppingCart: '/shopping-cart',
             toStart: '/to-start',
             whyYouShould: '/why-you-should-choose-us',
+            contactInformation: '/contact-information',
         };
 
         this.middleware();
@@ -55,6 +57,8 @@ class Server {
         this.app.use(this.paths.shoppingCart, require('../routes/shopping-cart'));
         this.app.use(this.paths.toStart, require('../routes/to-start'));
         this.app.use(this.paths.whyYouShould, require('../routes/why-you-should-choose-us'));
+        this.app.use(this.paths.product, require('../routes/product'));
+        this.app.use(this.paths.contactInformation, require('../routes/contact-information'));
     }
 
 
