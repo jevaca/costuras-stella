@@ -45,36 +45,36 @@
 				<div class="content mt-1">
 
 					<div align="center" class="">
-						<img src="images/pic02.jpg" alt="prueba" width="200" height="200" />
+						<img id="imgPerfil" src="images/pic02.jpg" alt="prueba" width="275" height="275" />
 						<div align="center" class="">
-						<input  value="Subir" class="button small" type="submit">
+						<input id="btnSubirImagen" value="Subir" class="button small" type="submit">
+						<input type="file"
+						id="avatar" name="avatar"
+						accept="image/png, image/jpeg">
 					</div>
 
-					
-
-
-					</div>
+				</div>
 					
 					<form action="#" method="post">
 
 						<div class="field">
 							<label for="name">Nombre</label>
-							<input name="name" id="name" type="text" placeholder="Nombre">
+							<input name="name" id="inputName" type="text" placeholder="Nombre">
 						</div>
 						<div class="field">
 							<label for="email">Email</label>
-							<input name="email" id="email" type="email" placeholder="Email">
+							<input name="email" id="inputEmail" type="email" placeholder="Email">
 						</div>
 						<div class="field">
 							<label for="email">Contraseña</label>
-							<input name="email" id="email" type="email" placeholder="Contraseña">
+							<input name="email" id="inputPassword" type="email" placeholder="Contraseña">
 						</div>
 						<div class="field">
 							<label for="email">Repetir Contraseña</label>
-							<input name="email" id="email" type="email" placeholder="Contraseña">
+							<input name="email" id="inputPassword2" type="email" placeholder="Contraseña">
 						</div>
 						<div class="row uniform">
-							<div align="right" class="6u 12u$(xsmall)">
+							<div id="btnModificar" align="right" class="6u 12u$(xsmall)">
 								<a class="button special" >Modificar</a>
 							</div>
 							<div align="left" class="6u$ 12u$(xsmall)">
@@ -133,6 +133,11 @@
 		const linkProfile = document.querySelector('#linkProfile');
 		const linkShoppingCart = document.querySelector('#linkShoppingCart');
 		const linkLogin = document.querySelector('#linkLogin');
+		const btnLogout = document.querySelector('#btnLogout');
+		const inputEmail = document.querySelector('#inputEmail');
+		const inputNombre = document.querySelector('#inputNombre');
+		const imgPerfil = document.querySelector('#imgPerfil');
+		const btnSubirImagen = document.querySelector('#btnSubirImagen');
 
 		if (!session) {
 			linkOrders.style.display = 'none';
@@ -142,18 +147,41 @@
 			linkLogin.style.display = 'none';
 		}
 
-
-		const btnLogout = document.querySelector('#btnLogout');
-
-
 		btnLogout.addEventListener('click', () => { //el segundo parametro es una callback
 
 			localStorage.removeItem('JWT-costuras-stella');
 			localStorage.removeItem('shoppingCart');
+			localStorage.removeItem('user-costuras-stella');
 
 			window.location.href = '/';
 
 		});
+
+		btnSubirImagen.addEventListener('click', () => { //el segundo parametro es una callback
+
+
+
+		});
+
+		
+
+		const rellenarCampos = () => {
+
+			const usuario = JSON.parse(localStorage.getItem('user-costuras-stella'));
+
+			inputName.value = usuario.nombre;
+			inputEmail.value = usuario.correo;
+		
+			if ( !usuario.img ) {
+				return imgPerfil.src = 'https://res.cloudinary.com/dda9lhkn8/image/upload/v1635557472/axixjonpxpj8mpl43cgz.jpg';
+
+			} 
+
+			imgPerfil.src = usuario.img;
+
+		}
+
+		rellenarCampos();
 	</script>
 
 	

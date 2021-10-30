@@ -153,7 +153,9 @@
 			try {
 				const data = await fetch('https://rest-server-crud-usuarios.herokuapp.com/api/auth/login', settings);
 
-				const { token } = await data.json();
+				const { usuario, token } = await data.json();
+
+				localStorage.setItem('user-costuras-stella', JSON.stringify( usuario ));
 
 				if (token) {
 					localStorage.setItem('JWT-costuras-stella', JSON.stringify(token));
