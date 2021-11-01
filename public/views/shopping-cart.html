@@ -55,6 +55,7 @@
 									<th>Índice</th>
 									<th>Producto</th>
 									<th>Talle</th>
+									<th>Cantidad</th>
 									<th>Precio</th>
 								</tr>
 							</thead>
@@ -120,6 +121,9 @@
 		const linkShoppingCart = document.querySelector('#linkShoppingCart');
 		const linkLogin = document.querySelector('#linkLogin');
 		const btnComprar = document.querySelector('#btnComprar');
+		const carrito = JSON.parse(localStorage.getItem('shoppingCart'));
+
+		let precioTotal = 0;
 
 		if (!session) {
 			linkOrders.style.display = 'none';
@@ -135,32 +139,32 @@
 			const tbody = document.querySelector('#tbodyProductos');
 			const tfoot = document.querySelector('#tfootProductos');
 
-			const carrito = JSON.parse(localStorage.getItem('shoppingCart'));
+			
 
 			let tbodyHtml = '';
-			let total = 0;
 			let producto;
 
 			if (carrito) {
 				for (let i = 0; i < carrito.length; i++) {
 
 					tbodyHtml += ` <tr>
-				<td>${i + 1}</td>
-				<td>${carrito[i].nombre}</td>
-				<td>${carrito[i].talle}</td>
-				<td>${carrito[i].precio}</td>
-				<td><a href="/shopping-cart?delete=${i}" class="button alt small">Borrar</a></td>
-			  </tr>`;
+						<td>${i + 1}</td>
+						<td>${carrito[i].nombre}</td>
+						<td>${carrito[i].talle}</td>
+						<td>${carrito[i].cantidad}</td>
+						<td>${carrito[i].precio * carrito[i].cantidad}</td>
+						<td><a href="/shopping-cart?delete=${i}" class="button alt small">Borrar</a></td>
+					</tr>`;
 
-					total += carrito[i].precio;
+			  		precioTotal += carrito[i].precio * carrito[i].cantidad;
 				}
 			}
 
 			const tfootHtml = `	<tr>
 									<td colspan="1"></td>
 									<td>TOTAL</td>
-									<td colspan="1"></td>
-									<td>${total}</td>
+									<td colspan="2"></td>
+									<td>${precioTotal}</td>
 								</tr>`;
 
 			tbody.innerHTML = tbodyHtml;
@@ -190,25 +194,72 @@
 				localStorage.removeItem('shoppingCart');
 			}
 
-
-
 			window.location.href = '/shopping-cart';
 		}
 
+		const crearPedido = async () => {
 
-		cargarCompontes();
+			const token = JSON.parse(localStorage.getItem('JWT-costuras-stella'));
 
-		btnComprar.addEventListener('click', () => {
+			carrito.forEach(producto => {
+				
+				delete producto.precio; //sacamos el precio porque no es necesario subirlo al esquema, ya que tenemos el total
 
-			const carrito = localStorage.getItem('shoppingCart');
+			});
+
+			const settings = {
+
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'x-token': token,
+				},
+				body: JSON.stringify({
+				
+					total: precioTotal,
+					estado: 'pendiente',
+					productos: carrito
+
+				})
+
+			}
+
+			try {
+				const data = await fetch('https://rest-server-crud-usuarios.herokuapp.com/api/pedidos', settings);
+
+				const respuesta = await data.json();
+
+				if( respuesta.msg == 'Token no válido' ){
+					localStorage.clear();
+					 return window.location.href = '/login';
+				}
+
+				console.log( respuesta );
+
+
+
+			} catch (error) {
+				console.log(error);
+			}
+
+		}
+
+		btnComprar.addEventListener('click', async () => {
 
 			if( !carrito ){
 				return swal('Error', 'No hay productos en su carrito', 'error');
 			}
 
+			await crearPedido();
+
+			localStorage.removeItem('shoppingCart');
+
 			window.location.href = '/contact-information';
 
 		});
+
+		cargarCompontes();
 
 	</script>
 

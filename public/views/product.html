@@ -148,12 +148,29 @@
 			let card = `<p><span class="image left"><img src="${producto.img}" alt="" width="275"
 									height="275" /></span>${producto.descripcion}</p>
 						<p class="fw-bold fs-4">Precio: $ ${producto.precio}.00 ARS</p>
-						<select name="talle" id="talle" class="bg-dark mt-4">
+						<select name="cantidad" id="selectCantidad" class="bg-dark mt-4">
+							<option value=0>Cantidad</option>
+							<option value=1>1</option>
+							<option value=2>2</option>
+							<option value=3>3</option>
+							<option value=4>4</option>
+							<option value=5>5</option>
+						</select>
+						`;
+			
+			if ( producto.tieneTalle ) {
+
+				let talle = `<select name="talle" id="talle" class="bg-dark mt-4">
+							<option value="Talle">Talle</option>
 							<option value="S">S</option>
 							<option value="M">M</option>
 							<option value="L">L</option>
 							<option value="XL">XL</option>
 						</select>`;
+					
+				card += talle;
+
+			}
 
 			header.innerHTML = titulo;
 			div.innerHTML = card;
@@ -161,28 +178,49 @@
 
 		btnAniadir.addEventListener('click', async () => {
 
-			let productos = localStorage.getItem('shoppingCart');
-			let usuario = localStorage.getItem('user-costuras-stella');
-			let selectTalle = document.querySelector('#talle');
-			let nuevoProducto = [{nombre: producto.nombre, talle: selectTalle.value, precio: producto.precio }];
+			const productos = JSON.parse(localStorage.getItem('shoppingCart'));
+			const usuario = localStorage.getItem('user-costuras-stella');
+			const selectTalle = document.querySelector('#talle');
+			const selectCantidad = document.querySelector('#selectCantidad');
 
-			productos = JSON.parse(productos);
+			let talleProducto =  ( producto.tieneTalle ) ? selectTalle.value : 'S/T';
 
-			if( !usuario ){
+			let nuevoProducto = [{ id: producto._id, nombre: producto.nombre, talle: talleProducto, precio: producto.precio, cantidad: selectCantidad.value }];
+
+			//productos = JSON.parse(productos);
+
+			if (!usuario) {
 				return swal('Error', 'Debe ingresar con su usuario y contraseña antes de agregar un producto al carrito', 'error');
+			}
+			
+			if ( selectCantidad.value == 0 ) {
+				return swal('Error', 'Debe seleccionar una cantidad antes de agregar un producto', 'error');
+			}
+			
+			if ( talleProducto === 'Talle') {
+				return swal('Error', 'Debe seleccionar un talle antes de agregar el producto', 'error');
 			}
 
 			if (!productos) {
 				swal('Producto agregado al carrito', 'Para visualizarlo puede ingresar desde el menú', 'success');
 				return localStorage.setItem("shoppingCart", JSON.stringify(nuevoProducto));
-			} 
+			}
 
-			let arrProductos = productos.concat(nuevoProducto);
+			productos.forEach(element => {
+				if (element.nombre == producto.nombre && element.talle == talleProducto) {
+					element.cantidad = Number(element.cantidad) + Number(selectCantidad.value);
+					nuevoProducto = [];
+				}
+			});
 
-			localStorage.setItem("shoppingCart", JSON.stringify(arrProductos));
+			if (nuevoProducto) {
+				let arrProductos = productos.concat(nuevoProducto);
+				localStorage.setItem("shoppingCart", JSON.stringify(arrProductos));
+
+				swal('Producto agregado al carrito', 'Para visualizarlo puede ingresar desde el menú', 'success');
+			}
 
 
-			swal('Producto agregado al carrito', 'Para visualizarlo puede ingresar desde el menú', 'success');
 
 		});
 
