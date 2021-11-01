@@ -66,7 +66,7 @@
 					</div>
 				</div>
 				<footer>
-					<a href="/contact-information" class="button special">Comprar</a>
+					<a id="btnComprar" class="button special">Realizar Pedido</a>
 				</footer>
 			</article>
 		</div>
@@ -111,13 +111,15 @@
 	<script src="assets/js/skel.min.js"></script>
 	<script src="assets/js/util.js"></script>
 	<script src="assets/js/main.js"></script>
-	
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 
 	<script>
 		const linkOrders = document.querySelector('#linkOrders');
 		const linkProfile = document.querySelector('#linkProfile');
 		const linkShoppingCart = document.querySelector('#linkShoppingCart');
 		const linkLogin = document.querySelector('#linkLogin');
+		const btnComprar = document.querySelector('#btnComprar');
 
 		if (!session) {
 			linkOrders.style.display = 'none';
@@ -139,20 +141,20 @@
 			let total = 0;
 			let producto;
 
-			for (let i = 0; i < carrito.length; i++) {
+			if (carrito) {
+				for (let i = 0; i < carrito.length; i++) {
 
-				tbodyHtml += ` <tr>
-								<td>${i+1}</td>
-								<td>${carrito[i].nombre}</td>
-								<td>${carrito[i].talle}</td>
-								<td>${carrito[i].precio}</td>
-								<td><a href="/shopping-cart?delete=${i}" class="button alt small">Borrar</a></td>
-							  </tr>`;
+					tbodyHtml += ` <tr>
+				<td>${i + 1}</td>
+				<td>${carrito[i].nombre}</td>
+				<td>${carrito[i].talle}</td>
+				<td>${carrito[i].precio}</td>
+				<td><a href="/shopping-cart?delete=${i}" class="button alt small">Borrar</a></td>
+			  </tr>`;
 
-				total += carrito[i].precio;
+					total += carrito[i].precio;
+				}
 			}
-
-
 
 			const tfootHtml = `	<tr>
 									<td colspan="1"></td>
@@ -176,19 +178,37 @@
 
 		let productoEliminado = getParameterByName('delete');
 
-		if ( productoEliminado ) {
+		if (productoEliminado) {
 
 			let arr = JSON.parse(localStorage.getItem('shoppingCart'));
 
 			arr.splice(productoEliminado, 1);
-			
-			localStorage.setItem('shoppingCart', JSON.stringify(arr));
+
+			if (arr.length > 0) {
+				localStorage.setItem('shoppingCart', JSON.stringify(arr));
+			} else {
+				localStorage.removeItem('shoppingCart');
+			}
+
+
 
 			window.location.href = '/shopping-cart';
 		}
 
-	
+
 		cargarCompontes();
+
+		btnComprar.addEventListener('click', () => {
+
+			const carrito = localStorage.getItem('shoppingCart');
+
+			if( !carrito ){
+				return swal('Error', 'No hay productos en su carrito', 'error');
+			}
+
+			window.location.href = '/contact-information';
+
+		});
 
 	</script>
 

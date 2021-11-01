@@ -162,12 +162,18 @@
 		btnAniadir.addEventListener('click', async () => {
 
 			let productos = localStorage.getItem('shoppingCart');
+			let usuario = localStorage.getItem('user-costuras-stella');
 			let selectTalle = document.querySelector('#talle');
 			let nuevoProducto = [{nombre: producto.nombre, talle: selectTalle.value, precio: producto.precio }];
 
 			productos = JSON.parse(productos);
 
+			if( !usuario ){
+				return swal('Error', 'Debe ingresar con su usuario y contraseña antes de agregar un producto al carrito', 'error');
+			}
+
 			if (!productos) {
+				swal('Producto agregado al carrito', 'Para visualizarlo puede ingresar desde el menú', 'success');
 				return localStorage.setItem("shoppingCart", JSON.stringify(nuevoProducto));
 			} 
 

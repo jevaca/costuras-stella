@@ -45,12 +45,9 @@
 				<div class="content mt-1">
 
 					<div align="center" class="">
-						<img id="imgPerfil" src="images/pic02.jpg" alt="prueba" width="275" height="275" />
+						<img id="imgPerfil" src=""" alt="prueba" width="275" height="275" />
 						<div align="center" class="">
-						<input id="btnSubirImagen" value="Subir" class="button small" type="submit">
-						<input type="file"
-						id="avatar" name="avatar"
-						accept="image/png, image/jpeg">
+						<input type="file" id="inputAvatar" name="avatar" accept="image/png, image/jpeg">
 					</div>
 
 				</div>
@@ -67,15 +64,15 @@
 						</div>
 						<div class="field">
 							<label for="email">Contraseña</label>
-							<input name="email" id="inputPassword" type="email" placeholder="Contraseña">
+							<input name="email" id="inputPassword" type="password" placeholder="Contraseña">
 						</div>
 						<div class="field">
 							<label for="email">Repetir Contraseña</label>
-							<input name="email" id="inputPassword2" type="email" placeholder="Contraseña">
+							<input name="email" id="inputPassword2" type="password" placeholder="Contraseña">
 						</div>
 						<div class="row uniform">
-							<div id="btnModificar" align="right" class="6u 12u$(xsmall)">
-								<a class="button special" >Modificar</a>
+							<div align="right" class="6u 12u$(xsmall)">
+								<a id="btnModificar" class="button special" >Modificar</a>
 							</div>
 							<div align="left" class="6u$ 12u$(xsmall)">
 								<a id="btnLogout" class="button" >Salir</a>
@@ -126,7 +123,7 @@
 	<script src="assets/js/skel.min.js"></script>
 	<script src="assets/js/util.js"></script>
 	<script src="assets/js/main.js"></script>
-	<!-- <script src="../../helpers/validar-links.js"></script> -->
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 	<script>
 		const linkOrders = document.querySelector('#linkOrders');
@@ -135,9 +132,12 @@
 		const linkLogin = document.querySelector('#linkLogin');
 		const btnLogout = document.querySelector('#btnLogout');
 		const inputEmail = document.querySelector('#inputEmail');
-		const inputNombre = document.querySelector('#inputNombre');
+		const inputName = document.querySelector('#inputName');
+		const inputPassword = document.querySelector('#inputPassword');
+		const inputPassword2 = document.querySelector('#inputPassword2');
 		const imgPerfil = document.querySelector('#imgPerfil');
-		const btnSubirImagen = document.querySelector('#btnSubirImagen');
+		const btnModificar = document.querySelector('#btnModificar');
+		const inputAvatar = document.querySelector('#inputAvatar');
 
 		if (!session) {
 			linkOrders.style.display = 'none';
@@ -157,13 +157,122 @@
 
 		});
 
-		btnSubirImagen.addEventListener('click', () => { //el segundo parametro es una callback
+		btnModificar.addEventListener('click', async () => { //el segundo parametro es una callback
 
+			let campos = {};
+			const usuario = JSON.parse(localStorage.getItem('user-costuras-stella'));
 
+			//validaciones
+			if (inputName.value.length < 8) {
+				return swal('Nombre no válido', 'Por favor ingrese un nombre válido', 'error');
+			}
 
+			if (inputEmail.value.length < 8) {
+				return swal('Email no válido', 'Por favor ingrese un email válido', 'error');
+			}
+
+			if (inputPassword.value.length > 0 && inputPassword.value.length < 8) {
+				return swal('Contraseña no válida', 'Por favor ingrese una contraseña válida', 'error');
+			}
+
+			if (inputPassword.value !== inputPassword2.value) {
+				return swal('Las Contraseñas no Coinciden', 'Por favor verifica que las contraseñas coincidan', 'error');
+			}
+
+			if( inputName.value !== usuario.nombre ) {
+				campos.nombre = inputName.value;
+			}
+
+			if ( inputEmail.value !== usuario.correo) {
+				campos.correo = inputEmail.value;
+			}
+
+			if( inputPassword.value ){
+				campos.password = inputPassword.value;
+			}
+
+			if ( Object.keys(campos).length <1 && !inputAvatar.value ){
+				return swal('Error', 'No hay campos que modificar', 'error');
+			}
+			
+			if ( Object.keys(campos).length > 0 ) {
+				//console.log(campos);
+				campos.rol = 'USER_ROLE'; 
+				await actualizarUsuario( usuario.uid, campos );				
+			}
+
+			//solo actualizamos la imagen si el usuario seleccionó una imagen.
+			if ( inputAvatar.value ) {
+				await actualizarAvatar();
+			}
+
+			inputAvatar.value = '';
+			swal('Modificación Exitosa', 'Los campos se han modificado con éxito', 'success');
+			
 		});
 
-		
+		const actualizarUsuario = async ( uid, campos ) => {
+
+			
+			const settings = {
+
+				method: 'PUT',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(campos)
+
+			}
+
+			try {
+				const data = await fetch(`https://rest-server-crud-usuarios.herokuapp.com/api/usuarios/${ uid } `, settings);
+
+				const usuarioModificado = await data.json();
+
+				console.log(usuarioModificado);
+				localStorage.setItem('user-costuras-stella', JSON.stringify(usuarioModificado.usuario));
+
+				return true;
+
+			} catch (error) {
+				console.log(error);
+			}
+
+		}
+
+		const actualizarAvatar = async () => {
+			const usuario = JSON.parse(localStorage.getItem('user-costuras-stella'));
+
+			let formdata = new FormData();
+			formdata.append("archivo", inputAvatar.files[0]);
+
+			const settings = {
+
+				method: 'PUT',
+				body: formdata
+
+			}
+
+			try {
+				const data = await fetch(`https://rest-server-crud-usuarios.herokuapp.com/api/uploads/usuarios/${ usuario.uid }`, settings);
+
+				const usuarioModificado = await data.json();
+
+				if( usuarioModificado.img ){
+					usuario.img = usuarioModificado.img;
+				}
+
+				localStorage.setItem('user-costuras-stella', JSON.stringify(usuario));
+				imgPerfil.src = usuarioModificado.img;
+
+				return true;
+
+			} catch (error) {
+				console.log(error);
+			}
+
+		}
 
 		const rellenarCampos = () => {
 
