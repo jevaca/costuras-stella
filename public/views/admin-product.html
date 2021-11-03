@@ -1,0 +1,457 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Administración</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="subpage">
+
+		<script>
+
+			const session = localStorage.getItem('user-costuras-stella');
+	
+			if (!session) {
+				window.location.href = '/login';
+			}
+	
+		</script>
+
+			<header id="header" class="alt">
+				<div class="logo"><a href="/">Costuras <span>Stella</span></a></div>
+				<a href="#menu"><span>Menú</span></a>
+			</header>
+
+			<nav id="menu">
+				<ul class="links">
+					<li><a href="/">Inicio</a></li>
+					<li><a href="/catalogue">Catálogo</a></li>
+					<li id="linkOrders"><a href="/orders">Pedidos</a></li>
+					<li id="linkLogin"><a href="/login">Ingresar</a></li>
+					<li id="linkProfile"><a href="/profile">Perfil</a></li>
+					<li id="linkShoppingCart"><a href="/shopping-cart">Carrito de Compras</a></li>
+                    <li id="linkAdmin" style="display: none;"><a href="/admin">Administración</a></li>
+				</ul>
+			</nav>
+
+			<section id="post" class="wrapper bg-img" data-bg="banner11.jpg">
+				<div class="inner">
+					<article class="box">
+						<header>
+							<h2 id="titulo" align="center"></h2>
+						</header>
+						<div class="content">
+                            <div class="row">
+                                <div align="center" class="6u 12u$(small)">
+                                    <img id="imgProducto" src="https://res.cloudinary.com/dda9lhkn8/image/upload/v1635474214/tofzsuek2n2y9w7qe2s5.jpg" alt="" width="325" height="325" />
+                                    <input onChange=previsualizarImg(this) style="margin-top: 10px;" type="file" id="inputAvatar" name="avatar" accept="image/png, image/jpeg">
+                                </div>
+                                <div style="margin-top: 15px;" class="6u$ 12u$(small)">
+                                    <div class="field">
+                                        <label for="name">Nombre</label>
+                                        <input name="name" id="inputName" type="text" placeholder="Nombre">
+                                    </div>
+                                    <div class="field" style="margin-top: 20px;">
+                                        <label for="name">Precio</label>
+                                        <input name="name" id="inputPrecio" type="text" placeholder="Nombre">
+                                    </div>
+                                    <div class="field" style="margin-top: 20px;">
+                                        <label for="name">Categoría</label>
+                                        <select name="category" id="selectCategoria" class="bg-dark">
+                                        </select>
+                                    </div>
+                                    <div align="center" class="field" style="margin-top: 20px;">
+                                        <input type="checkbox" id="chkTalle" name="talle">
+										<label for="chkTalle">Tiene Talle</label>
+                                        <input type="checkbox" id="chkDisponible" name="disponible">
+										<label for="chkDisponible">Disponible</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 20px;">
+                                <h5>Descripción</h5>
+                                <textarea name="message" id="txtAreaDescripcion" placeholder="Descripción" rows="6"></textarea>
+                            </div>
+                            
+						</div>
+						<footer style="margin-top: 20px;">
+                            <div>
+                                <button id="btnActualizar" href="" class="button special small" value="Actualizar"></button>
+                            </div>
+                            <div>
+                                <a id="btnAtras" style="margin-top: 10px;" href="/admin-products" class="button small">Atrás</a>
+                            </div>
+						</footer>
+					</article>
+				</div>
+			</section>
+
+			<footer id="footer">
+				<div class="inner">
+
+					<h2>Información de Contacto</h2>
+
+					<form action="#" method="post">
+
+						<div class="field half first">
+							<label for="name">Nombre</label>
+							<input name="name" id="name" type="text" placeholder="Nombre">
+						</div>
+						<div class="field half">
+							<label for="email">Email</label>
+							<input name="email" id="email" type="email" placeholder="Email">
+						</div>
+						<div class="field">
+							<label for="message">Mensaje</label>
+							<textarea name="message" id="message" rows="6" placeholder="Mensaje"></textarea>
+						</div>
+						<ul class="actions">
+							<li><input value="Enviar" class="button alt" type="submit"></li>
+						</ul>
+					</form>
+
+					<ul class="icons">
+						<li><a href="#" class="icon round fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon round fa-facebook"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="icon round fa-instagram"><span class="label">Instagram</span></a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+			<script>
+				const linkOrders = document.querySelector('#linkOrders');
+				const linkProfile = document.querySelector('#linkProfile');
+				const linkShoppingCart = document.querySelector('#linkShoppingCart');
+				const linkLogin = document.querySelector('#linkLogin');
+                const linkAdmin = document.querySelector('#linkAdmin');
+
+                const btnActualizar = document.querySelector('#btnActualizar');
+                const imgProducto = document.querySelector('#imgProducto');
+                const inputAvatar = document.querySelector('#inputAvatar');
+
+                const inputName = document.querySelector('#inputName');
+                const inputPrecio = document.querySelector('#inputPrecio');
+                const selectCategoria = document.querySelector('#selectCategoria');
+                const chkTalle = document.querySelector('#chkTalle');
+                const chkDisponible = document.querySelector('#chkDisponible');
+                const txtAreaDescripcion = document.querySelector('#txtAreaDescripcion');
+
+                let producto;
+
+
+                const token = JSON.parse(localStorage.getItem('JWT-costuras-stella'));
+
+				if( !session ){
+					linkOrders.style.display = 'none';
+					linkProfile.style.display = 'none';
+					linkShoppingCart.style.display = 'none';
+				} else {
+					linkLogin.style.display = 'none';
+				}
+
+                const usuario = JSON.parse( session );
+
+                if ( usuario ) {
+
+                    if ( usuario.rol == 'ADMIN_ROLE' ) {
+
+                        linkAdmin.style.display = '';
+
+                    } else {
+
+                        window.location.href = '/';
+
+                    }
+
+                }
+
+                const getParameterByName = (name) => {
+			        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			        let regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			        results = regex.exec(location.search);
+			        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		        }
+
+                const getCategorias = async () => {
+
+                    try {
+
+                        const data = await fetch(`https://rest-server-crud-usuarios.herokuapp.com/api/categorias`);
+
+                        const respuesta = await data.json();
+
+                        return respuesta;
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                }
+
+                const cargarSelect = async ( nombreCategoria = 'Categoría' ) => {
+
+                    const { categoria } = await getCategorias();
+                    let options = `<option value="0" style="display:none" disabled selected value>${nombreCategoria}</option>`
+
+                    categoria.forEach(element => {
+                        options += ` <option style="color: black;" value=${element._id} >${element.nombre}</option> `;
+                    });
+
+                    selectCategoria.innerHTML = options;
+
+                }
+
+                const getProducto = async ( id ) => {
+
+                    try {
+
+                        const data = await fetch(`https://rest-server-crud-usuarios.herokuapp.com/api/productos/${id}`);
+
+                        const respuesta = await data.json();
+
+                        return respuesta;
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+                    
+                }
+
+                const crearProducto = async () => {
+
+                    const settings = {
+
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'x-token': token,
+                        },
+                        body: JSON.stringify({
+                            
+                            nombre: inputName.value,
+                            precio: inputPrecio.value,
+                            categoria: selectCategoria.value,
+                            tieneTalle:  chkTalle.checked,
+                            disponible: chkDisponible.checked,
+                            descripcion: txtAreaDescripcion.value,
+                            img: '',
+                            estado: true,
+
+                        })
+
+                    }
+
+                    try {
+
+                        const data = await fetch('https://rest-server-crud-usuarios.herokuapp.com/api/productos', settings);
+
+                        const respuesta = await data.json();
+
+                        return respuesta;
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                }
+
+                const actualizarImagen = async ( id ) => {
+
+                    let formdata = new FormData();
+                    formdata.append("archivo", inputAvatar.files[0]);
+
+                    const settings = {
+
+                        method: 'PUT',
+                        body: formdata
+
+                    }
+
+                    try {
+                        const data = await fetch(`https://rest-server-crud-usuarios.herokuapp.com/api/uploads/productos/${ id }`, settings);
+
+                        const respuesta = await data.json();
+
+                        return respuesta;
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                }
+                
+                const actualizarProducto = async ( { _id, nombre, categoria } ) => {
+                    
+                    const body = {
+                        precio: inputPrecio.value,
+                        tieneTalle:  chkTalle.checked,
+                        disponible: chkDisponible.checked,
+                        descripcion: txtAreaDescripcion.value,
+                        estado: true,
+                    }
+
+                    if ( inputName.value != nombre ) {
+                        body.nombre = inputName.value;
+                    }
+
+                    if ( selectCategoria.options[selectCategoria.selectedIndex].text != categoria.nombre ) {
+                        body.categoria = selectCategoria.value;
+                    }
+
+                    const settings = {
+
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'x-token': token,
+                        },
+                        body: JSON.stringify(body)
+
+                    }
+
+                    try {
+
+                        const data = await fetch(`https://rest-server-crud-usuarios.herokuapp.com/api/productos/${_id}`, settings);
+
+                        const respuesta = await data.json();
+
+                        console.log(respuesta);
+
+                        return respuesta;
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                }
+
+                const validarCampos = async () => {
+
+                    if ( inputName.value.length < 8 ) {
+                        swal('Error', 'Ingrese un nombre válido', 'error');
+                        return false;
+                    }
+
+                    if ( !inputPrecio.value ) {
+                        swal('Error', 'El precio no puede estar vacío', 'error');
+                        return false;
+                    } else {
+                        if ( isNaN(inputPrecio.value) ) {
+                            swal('Error', 'El precio no puede contener letras', 'error');
+                            return false;
+                        }
+                    }
+
+                    if ( selectCategoria.options[selectCategoria.selectedIndex].text == 'Categoría' ) {
+                        swal('Error', 'Seleccione una categoría', 'error')
+                        return false;
+                    }
+
+                    if ( !txtAreaDescripcion.value ) {
+                        swal('Error', 'La descripción del producto no puede estar vacía', 'error')
+                        return false;
+                    }
+
+                    return true;
+
+                }
+
+                const limpiarComponentes = () => {
+                    inputAvatar.value = '';
+                    inputName.value = '';
+                    inputPrecio.value = '';
+                    selectCategoria.value = '';
+                    chkTalle.checked = false;
+                    chkDisponible.checked = false;
+                    txtAreaDescripcion.value = '';
+                    imgProducto.src = 'https://res.cloudinary.com/dda9lhkn8/image/upload/v1635474214/tofzsuek2n2y9w7qe2s5.jpg';
+                }
+
+                const llenarCampos = ( producto ) => {
+
+                    inputName.value = producto.nombre;
+                    inputPrecio.value = producto.precio;
+                    chkTalle.checked = producto.tieneTalle;
+                    chkDisponible.checked = producto.disponible;
+                    txtAreaDescripcion.value = producto.descripcion;
+                    
+                    if( producto.img ) {
+                        imgProducto.src = producto.img
+                    }
+
+                }
+
+                const cargarComponentes = async () => {
+
+                    limpiarComponentes();
+
+                    const id = getParameterByName('id');
+
+                    if ( id ) {
+
+                        btnActualizar.innerText = 'Actualizar';
+                        producto = await getProducto( id );
+                        llenarCampos( producto );
+                        cargarSelect( producto.categoria.nombre );
+
+                    } else {
+
+                        btnActualizar.innerText = 'Crear';
+                        cargarSelect();
+
+                    }
+
+                }
+
+                const previsualizarImg = ( obj ) => {
+
+                    imgProducto.src = URL.createObjectURL(obj.files[0]);
+
+                }
+
+                btnActualizar.addEventListener('click', async () => {
+
+                    const id = getParameterByName('id');
+
+                    const ok = await validarCampos();
+
+                    if ( !ok ) {
+                        return false;
+                    }
+
+                    if ( !id ) {
+                        const productoNuevo = await crearProducto( );
+                        const idProductoNuevo = productoNuevo._id;
+                        await actualizarImagen( idProductoNuevo );
+                        limpiarComponentes();
+                        return swal('Éxito', 'El producto ha sido creado con éxito', 'success');
+                    }
+
+                    await actualizarProducto( producto );
+
+                    if ( inputAvatar.value ) {
+                        await actualizarImagen( id );
+                    }
+
+                    return swal('Modificación exitosa', 'El producto ha sido modificado con éxito', 'success');
+
+                });
+
+                cargarComponentes();
+
+			</script>
+
+	</body>
+</html>

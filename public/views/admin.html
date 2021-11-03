@@ -1,12 +1,22 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Acerca de Nosotros</title>
+		<title>Administración</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 	</head>
 	<body class="subpage">
+
+		<script>
+
+			const session = localStorage.getItem('user-costuras-stella');
+	
+			if (!session) {
+				window.location.href = '/login';
+			}
+	
+		</script>
 
 			<header id="header" class="alt">
 				<div class="logo"><a href="/">Costuras <span>Stella</span></a></div>
@@ -21,26 +31,47 @@
 					<li id="linkLogin"><a href="/login">Ingresar</a></li>
 					<li id="linkProfile"><a href="/profile">Perfil</a></li>
 					<li id="linkShoppingCart"><a href="/shopping-cart">Carrito de Compras</a></li>
-					<li id="linkAdmin" style="display: none;"><a href="/admin">Administración</a></li>
+                    <li id="linkAdmin" style="display: none;"><a href="/admin">Administración</a></li>
 				</ul>
 			</nav>
 
-			<section id="post" class="wrapper bg-img" data-bg="banner14.jpg">
+			<section id="post" class="wrapper bg-img" data-bg="banner11.jpg">
 				<div class="inner">
 					<article class="box">
 						<header>
-							<h2>Acerca de Nosotros</h2>
+							<h2 align="center">Administración</h2>
 						</header>
 						<div class="content">
-							<p>Costuras Stella es un emprendimiento enfocado en la creación de artículos y prendas que te acompañan en el día a día. Nos encontramos en Chacras de Coria - Luján de Cuyo (Provincia de Mendoza). Contamos con más de 30 años de experiencia en la confección de indumentaria.</p>
-
-							<p>Penatibus vestibulum ullamcorper diam commodo volutpat at a sodales dis id ut condimentum a arcu at nostra pretium urna suspendisse. Maecenas commodo adipiscing ad curabitur a a risus pulvinar habitant a et integer volutpat mi nullam curabitur a adipiscing nullam in bibendum vel cras scelerisque. Morbi a euismod litora dui nunc in pretium sodales ante dis dui natoque adipiscing a. Augue imperdiet dignissim adipiscing justo accumsan adipiscing vestibulum adipiscing fames class ad rutrum sociosqu ad auctor sodales dis mollis. Ac euismod enim ad viverra dui auctor at integer inceptos parturient mi convallis aliquet iaculis ad diam.</p>
+							<p style="text-align: center;">Seleccione una opción </p>
+		
+							<div class="table-wrapper">
+								<table>
+									<thead>
+										<tr>
+											<th></th>
+											<th></th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody id="tbodyAdministracion">
+                                        <tr>
+                                            <td>Pedidos</td>
+                                            <td colspan="1"></td>
+                                            <td align="right"><a href="/admin-orders" class="button alt icon fa-chevron-right small"><span class="label">Next</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Productos</td>
+                                            <td colspan="1"></td>
+                                            <td align="right"><a href="/admin-products" class="button alt icon fa-chevron-right small"><span class="label">Next</span></a></td>
+                                        </tr>
+									</tbody>
+									<tfoot id="tfootAdministracion">
+									</tfoot>
+								</table>
+							</div>
 						</div>
 						<footer>
-							<ul class="actions">
-								<li><a href="/to-start" class="button alt icon fa-chevron-left"><span class="label">Previous</span></a></li>
-								<li><a href="/products" class="button alt icon fa-chevron-right"><span class="label">Next</span></a></li>
-							</ul>
+							<a id="btnInicio" href="/" class="button special small">Inicio</a>
 						</footer>
 					</article>
 				</div>
@@ -91,9 +122,7 @@
 				const linkProfile = document.querySelector('#linkProfile');
 				const linkShoppingCart = document.querySelector('#linkShoppingCart');
 				const linkLogin = document.querySelector('#linkLogin');
-				const linkAdmin = document.querySelector('#linkAdmin');
-
-				const session = localStorage.getItem('user-costuras-stella');
+                const linkAdmin = document.querySelector('#linkAdmin');
 
 				if( !session ){
 					linkOrders.style.display = 'none';
@@ -103,17 +132,22 @@
 					linkLogin.style.display = 'none';
 				}
 
-				const usuario = JSON.parse( session );
+                const usuario = JSON.parse( session );
 
-				if ( usuario ) {
+                if ( usuario ) {
 
-					if ( usuario.rol == 'ADMIN_ROLE' ) {
+                    if ( usuario.rol == 'ADMIN_ROLE' ) {
 
-						linkAdmin.style.display = '';
+                        linkAdmin.style.display = '';
 
-					}
+                    } else {
 
-				}
+                        window.location.href = '/';
+
+                    }
+
+                }
+
 			</script>
 
 	</body>

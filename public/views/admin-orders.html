@@ -1,0 +1,320 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Administración de Pedidos</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="subpage">
+
+		<script>
+
+			const session = localStorage.getItem('user-costuras-stella');
+	
+			if (!session) {
+				window.location.href = '/login';
+			}
+	
+		</script>
+
+			<header id="header" class="alt">
+				<div class="logo"><a href="/">Costuras <span>Stella</span></a></div>
+				<a href="#menu"><span>Menú</span></a>
+			</header>
+
+			<nav id="menu">
+				<ul class="links">
+					<li><a href="/">Inicio</a></li>
+					<li><a href="/catalogue">Catálogo</a></li>
+					<li id="linkOrders"><a href="/orders">Pedidos</a></li>
+					<li id="linkLogin"><a href="/login">Ingresar</a></li>
+					<li id="linkProfile"><a href="/profile">Perfil</a></li>
+					<li id="linkShoppingCart"><a href="/shopping-cart">Carrito de Compras</a></li>
+                    <li id="linkAdmin" style="display: none;"><a href="/admin">Administración</a></li>
+				</ul>
+			</nav>
+
+			<section id="post" class="wrapper bg-img" data-bg="banner11.jpg">
+				<div class="inner">
+					<article class="box">
+						<header>
+							<h2 align="center">Administración de Pedidos</h2>
+						</header>
+						<div class="content">
+							<p style="text-align: center;">A continuación encontrará un listado con todos los pedidos y podrá modificar el estado de los mismos.</p>
+		
+							<div class="table-wrapper">
+								<table>
+									<thead>
+										<tr>
+											<th>Índice</th>
+											<th>#Pedido</th>
+											<th>Fecha</th>
+											<th>Total</th>
+											<th>Usuario</th>
+											<th>Estado</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody style="color: white;" id="tbodyPedidos">
+
+									</tbody>
+									<tfoot id="tfootPedidos">
+									</tfoot>
+								</table>
+							</div>
+						</div>
+						<footer>
+							<a id="btnAtras" href="/admin" class="button special small">Atrás</a>
+						</footer>
+					</article>
+				</div>
+
+                <div class="modal-container" id="modal_container">
+                    <div class="modal">
+                        <h1 style="color: black;">Detalle</h1>
+                        <div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="color:black;">Índice</th>
+                                        <th style="color:black;">Producto</th>
+                                        <th style="color:black;">Talle</th>
+                                        <th style="color:black;">Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyProductos">
+
+                                </tbody>
+                                <tfoot id="tfootProductos">
+                                </tfoot>
+                            </table>
+                        </div>
+                        <button id="btnCerrarVentana" class="button special small">Cerrar</button>
+                    </div>
+                </div>
+			</section>
+
+			<footer id="footer">
+				<div class="inner">
+
+					<h2>Información de Contacto</h2>
+
+					<form action="#" method="post">
+
+						<div class="field half first">
+							<label for="name">Nombre</label>
+							<input name="name" id="name" type="text" placeholder="Nombre">
+						</div>
+						<div class="field half">
+							<label for="email">Email</label>
+							<input name="email" id="email" type="email" placeholder="Email">
+						</div>
+						<div class="field">
+							<label for="message">Mensaje</label>
+							<textarea name="message" id="message" rows="6" placeholder="Mensaje"></textarea>
+						</div>
+						<ul class="actions">
+							<li><input value="Enviar" class="button alt" type="submit"></li>
+						</ul>
+					</form>
+
+					<ul class="icons">
+						<li><a href="#" class="icon round fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon round fa-facebook"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="icon round fa-instagram"><span class="label">Instagram</span></a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+			<script>
+				const linkOrders = document.querySelector('#linkOrders');
+				const linkProfile = document.querySelector('#linkProfile');
+				const linkShoppingCart = document.querySelector('#linkShoppingCart');
+				const linkLogin = document.querySelector('#linkLogin');
+                const linkAdmin = document.querySelector('#linkAdmin');
+                const { rol } = localStorage.getItem('user-costuras-stella');
+                const token = JSON.parse(localStorage.getItem('JWT-costuras-stella'));
+                const ventana = document.querySelector('#modal_container');
+                const btnCerrarVentana = document.querySelector('#btnCerrarVentana');
+
+				if( !session ){
+					linkOrders.style.display = 'none';
+					linkProfile.style.display = 'none';
+					linkShoppingCart.style.display = 'none';
+				} else {
+					linkLogin.style.display = 'none';
+				}
+
+                const getPedidos = async () => {
+
+                    try {
+
+                        const data = await fetch(` https://rest-server-crud-usuarios.herokuapp.com/api/pedidos?limite=100 `);
+
+                        const respuesta = await data.json();
+
+                        return respuesta;
+                        
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                }
+
+                const getPedidoByID = async ( id ) => {
+
+                try {
+
+                    const data = await fetch(` https://rest-server-crud-usuarios.herokuapp.com/api/pedidos/${id}`);
+
+                    const respuesta = await data.json();
+
+                    console.log(respuesta);
+
+                    return respuesta;
+                        
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                }
+
+                const cargarComponentes = async () => {
+
+                    const tbody   = document.querySelector('#tbodyPedidos');
+                    const { total, pedidos } = await getPedidos();
+
+                    let tbodyHtml = '';
+                    let aux = 0;
+
+                    pedidos.forEach(element => {
+                        aux++;
+                        tbodyHtml += ` <tr>
+                                <td>${aux}</td>
+                                <td>${element.numero}</td>
+                                <td>${element.fecha}</td>
+                                <td>${element.total}</td>
+                                <td>${element.usuario.nombre}</td>
+                                <td><select onChange="actualizarPedido(this);" name="category" id="category" class="special">
+                                        <option style="color: black;">${element.estado}</option>'
+                                        ${ ( element.estado == 'Pendiente' )         ? '' : `<option style="color: black;" value=${'Pendiente.'+element._id}>Pendiente</option>` }
+                                        ${ ( element.estado == 'Aceptado (Pagado)' ) ? '' : `<option style="color: black;" value=${'Aceptado.'+element._id}>Aceptado</option>` }
+                                        ${ ( element.estado == 'En Preparación' )    ? '' : `<option style="color: black;" value=${'Preparación.'+element._id}>Preparación</option>` }
+                                        ${ ( element.estado == 'Enviando' )          ? '' : `<option style="color: black;" value=${'Enviando.'+element._id}>Enviando</option>` }
+                                        ${ ( element.estado == 'Entregado' )         ? '' : `<option style="color: black;" value=${'Entregado.'+element._id}>Entregado</option>` }
+                                        ${ ( element.estado == 'Cancelado' )         ? '' : `<option style="color: black;" value=${'Cancelado.'+element._id}>Cancelado</option>` }
+                                    </select>
+                                </td>
+                                <td><a onClick=abrirVentana('${element._id}'); class="button special small">Ver Más</a></td>
+                            </tr>`;
+                    });
+
+                    tbody.innerHTML = tbodyHtml;
+
+                }
+
+                const actualizarPedido = async ( obj ) => {
+
+                    const [status, id] = obj.value.split('.');
+
+
+                    const settings = {
+
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+					        'Content-Type': 'application/json',
+                            'x-token': token,
+                        },
+                        
+                        body: JSON.stringify({
+                            estado: status,
+                        })
+
+                    }
+
+                    try {
+
+                        const data = await fetch(`https://rest-server-crud-usuarios.herokuapp.com/api/pedidos/${ id }`, settings);
+
+                        const respuesta = await data.json();
+
+                        if ( respuesta.msg == 'Token no válido') {
+                            localStorage.clear();
+                            return window.location.href = '/login';
+                        }
+
+                        window.location.href = '/admin-orders'
+
+                        return respuesta;
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                }
+
+                const abrirVentana = async ( id ) => {
+                    
+                    const tbodyProductos = document.querySelector('#tbodyProductos');
+
+                    const { productos } = await getPedidoByID( id );
+                    
+                    let tablaProductos = '';
+                    let aux = 0;
+
+                    productos.forEach(element => {
+                        aux++;
+                        tablaProductos += `<tr style="color:black;">
+                                <td>${aux}</td>
+                                <td>${element.producto.nombre}</td>
+                                <td>${element.talle}</td>
+                                <td>${element.cantidad}</td>
+                                </tr>`
+
+                    });
+
+                    
+
+                    tbodyProductos.innerHTML = tablaProductos;
+
+                    ventana.classList.add('show');
+
+                }
+
+                btnCerrarVentana.addEventListener('click', () => {
+                    ventana.classList.remove('show');
+                });
+
+                cargarComponentes();
+
+                const usuario = JSON.parse( session );
+
+                if ( usuario ) {
+
+                    if ( usuario.rol == 'ADMIN_ROLE' ) {
+
+                        linkAdmin.style.display = '';
+
+                    } else {
+
+                      window.location.href = '/';
+
+                    }
+
+                }
+
+			</script>
+
+	</body>
+</html>

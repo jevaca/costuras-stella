@@ -10,7 +10,7 @@
 
 		<script>
 
-			const session = localStorage.getItem('JWT-costuras-stella');
+			const session = localStorage.getItem('user-costuras-stella');
 	
 			if (!session) {
 				window.location.href = '/login';
@@ -31,6 +31,7 @@
 					<li id="linkLogin"><a href="/login">Ingresar</a></li>
 					<li id="linkProfile"><a href="/profile">Perfil</a></li>
 					<li id="linkShoppingCart"><a href="/shopping-cart">Carrito de Compras</a></li>
+					<li id="linkAdmin" style="display: none;"><a href="/admin">Administración</a></li>
 				</ul>
 			</nav>
 
@@ -60,6 +61,9 @@
 								</table>
 							</div>
 						</div>
+						<footer>
+							<a id="btnInicio" href="/" class="button special">Volver a Inicio</a>
+						</footer>
 					</article>
 				</div>
 			</section>
@@ -109,6 +113,7 @@
 				const linkProfile = document.querySelector('#linkProfile');
 				const linkShoppingCart = document.querySelector('#linkShoppingCart');
 				const linkLogin = document.querySelector('#linkLogin');
+				const linkAdmin = document.querySelector('#linkAdmin');
 
 				if( !session ){
 					linkOrders.style.display = 'none';
@@ -117,6 +122,68 @@
 				} else {
 					linkLogin.style.display = 'none';
 				}
+
+				const getPedidos = async () => {
+
+						const { uid } = JSON.parse(localStorage.getItem('user-costuras-stella'));
+
+						try {
+
+							const data = await fetch(` https://rest-server-crud-usuarios.herokuapp.com/api/buscar/pedidos/${uid} `);
+
+							const respuesta = await data.json();
+
+							return respuesta;
+							
+						} catch (error) {
+							console.log(error);
+						}
+
+				}
+
+				const cargarComponentes = async () => {
+
+					const tbody = document.querySelector('#tbodyPedidos');
+					const tfoot = document.querySelector('#tfootPedidos');
+
+
+
+					let tbodyHtml = '';
+					let aux = 0;
+					const pedidos = await getPedidos();
+
+					if ( pedidos.total > 0 ) {
+						console.log(pedidos);
+					}
+
+					 pedidos.results[0].forEach(element => {
+						aux++;
+						tbodyHtml += ` <tr>
+					 			<td>${aux}</td>
+								<td>${element.numero}</td>
+					 			<td>${element.fecha}</td>
+					 			<td>${element.estado}</td>
+					 		</tr>`;
+					});
+
+					 tbody.innerHTML = tbodyHtml;
+
+				}
+
+				cargarComponentes();
+
+				const usuario = JSON.parse( session );
+
+				if ( usuario ) {
+
+					if ( usuario.rol == 'ADMIN_ROLE' ) {
+
+						linkAdmin.style.display = '';
+
+					}
+
+				}
+
 			</script>
 
 	</body>

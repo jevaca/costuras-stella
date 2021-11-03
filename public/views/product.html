@@ -23,6 +23,7 @@
 			<li id="linkLogin"><a href="/login">Ingresar</a></li>
 			<li id="linkProfile"><a href="/profile">Perfil</a></li>
 			<li id="linkShoppingCart"><a href="/shopping-cart">Carrito de Compras</a></li>
+			<li id="linkAdmin" style="display: none;"><a href="/admin">Administración</a></li>
 		</ul>
 	</nav>
 
@@ -38,8 +39,11 @@
 
 					</div>
 
-					<a id="btnAniadir" class="button small special mt-4">Añadir al carrito</a>
-					<br>
+					<div id="divButtons">
+						<a id="btnAniadir" class="button small special mt-4">Añadir al carrito</a>
+						<br>
+					</div>
+					
 
 				</div>
 				<footer>
@@ -98,9 +102,11 @@
 		const linkProfile = document.querySelector('#linkProfile');
 		const linkShoppingCart = document.querySelector('#linkShoppingCart');
 		const linkLogin = document.querySelector('#linkLogin');
+		const linkAdmin = document.querySelector('#linkAdmin');
 		const btnAniadir = document.querySelector('#btnAniadir');
+		const divButtons = document.querySelector('#divButtons');
 
-		const session = localStorage.getItem('JWT-costuras-stella');
+		const session = localStorage.getItem('user-costuras-stella');
 
 		let producto;
 
@@ -174,6 +180,13 @@
 
 			header.innerHTML = titulo;
 			div.innerHTML = card;
+
+			if ( !producto.disponible ) {
+				btnAniadir.style = 'display: none';
+				const txtSinStock = `<h4 style="margin-top: 15px;">Sin Stock Disponible</h4>`;
+				divButtons.innerHTML = txtSinStock;
+			}
+
 		}
 
 		btnAniadir.addEventListener('click', async () => {
@@ -185,9 +198,7 @@
 
 			let talleProducto =  ( producto.tieneTalle ) ? selectTalle.value : 'S/T';
 
-			let nuevoProducto = [{ id: producto._id, nombre: producto.nombre, talle: talleProducto, precio: producto.precio, cantidad: selectCantidad.value }];
-
-			//productos = JSON.parse(productos);
+			let nuevoProducto = [{ producto: producto._id, nombre: producto.nombre, talle: talleProducto, precio: producto.precio, cantidad: selectCantidad.value }];
 
 			if (!usuario) {
 				return swal('Error', 'Debe ingresar con su usuario y contraseña antes de agregar un producto al carrito', 'error');
@@ -231,6 +242,17 @@
 
 		inicializar();
 
+		const usuario = JSON.parse( session );
+
+		if ( usuario ) {
+
+			if ( usuario.rol == 'ADMIN_ROLE' ) {
+
+				linkAdmin.style.display = '';
+
+			}
+
+		}
 
 	</script>
 

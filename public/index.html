@@ -17,13 +17,14 @@
 
 		<!-- Nav -->
 			<nav id="menu">
-				<ul class="links">
+				<ul class="links" id="links">
 					<li><a href="/">Inicio</a></li>
 					<li><a href="/catalogue">Catálogo</a></li>
 					<li id="linkOrders"><a href="/orders">Pedidos</a></li>
 					<li id="linkLogin"><a href="/login">Ingresar</a></li>
 					<li id="linkProfile"><a href="/profile">Perfil</a></li>
 					<li id="linkShoppingCart"><a href="/shopping-cart">Carrito de Compras</a></li>
+					<li id="linkAdmin" style="display: none;"><a href="/admin">Administración</a></li>
 				</ul>
 			</nav>
 
@@ -117,19 +118,19 @@
 
 					<h2>Información de Contacto</h2>
 
-					<form action="#" method="post">
+					<form action="https://formsubmit.co/dev.jvaca@gmail.com" method="post">
 
 						<div class="field half first">
 							<label for="name">Nombre</label>
-							<input name="name" id="name" type="text" placeholder="Nombre">
+							<input name="name" id="name" type="text" placeholder="Nombre" required>
 						</div>
 						<div class="field half">
 							<label for="email">Email</label>
-							<input name="email" id="email" type="email" placeholder="Email">
+							<input name="email" id="email" type="email" placeholder="Email" required>
 						</div>
 						<div class="field">
 							<label for="message">Mensaje</label>
-							<textarea name="message" id="message" rows="6" placeholder="Mensaje"></textarea>
+							<textarea name="message" id="message" rows="6" placeholder="Mensaje" required></textarea>
 						</div>
 						<ul class="actions">
 							<li><input value="Enviar" class="button alt" type="submit"></li>
@@ -159,8 +160,9 @@
 				const linkProfile = document.querySelector('#linkProfile');
 				const linkShoppingCart = document.querySelector('#linkShoppingCart');
 				const linkLogin = document.querySelector('#linkLogin');
+				const linkAdmin = document.querySelector('#linkAdmin');
 
-				const session = localStorage.getItem('JWT-costuras-stella');
+				const session = localStorage.getItem('user-costuras-stella');
 
 				if( !session ){
 					linkOrders.style.display = 'none';
@@ -169,6 +171,20 @@
 				} else {
 					linkLogin.style.display = 'none';
 				}
+
+				const usuario = JSON.parse( session );
+
+				if ( usuario ) {
+
+					if ( usuario.rol == 'ADMIN_ROLE' ) {
+					
+						linkAdmin.style.display = '';
+
+					}
+
+				}
+
+				
 
 			</script>
 

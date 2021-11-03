@@ -26,6 +26,12 @@ class Server {
             toStart: '/to-start',
             whyYouShould: '/why-you-should-choose-us',
             contactInformation: '/contact-information',
+            admin: '/admin',
+            productUpload: '/product-upload',
+            adminOrders: '/admin-orders',
+            adminProducts: '/admin-products',
+            adminProduct: '/admin-product',
+
         };
 
         this.middleware();
@@ -59,6 +65,11 @@ class Server {
         this.app.use(this.paths.whyYouShould, require('../routes/why-you-should-choose-us'));
         this.app.use(this.paths.product, require('../routes/product'));
         this.app.use(this.paths.contactInformation, require('../routes/contact-information'));
+        this.app.use(this.paths.admin, require('../routes/admin'));
+        this.app.use(this.paths.productUpload, require('../routes/product-upload'));
+        this.app.use(this.paths.adminOrders, require('../routes/admin-orders'));
+        this.app.use(this.paths.adminProducts, require('../routes/admin-products'));
+        this.app.use(this.paths.adminProduct, require('../routes/admin-product'));
     }
 
 

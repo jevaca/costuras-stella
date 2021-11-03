@@ -12,7 +12,7 @@
 
 	<script>
 
-		const session = localStorage.getItem('JWT-costuras-stella');
+		const session = localStorage.getItem('user-costuras-stella');
 
 		if (!session) {
 			window.location.href = '/login';
@@ -33,6 +33,7 @@
 			<li id="linkLogin"><a href="/login">Ingresar</a></li>
 			<li id="linkProfile"><a href="/profile">Perfil</a></li>
 			<li id="linkShoppingCart"><a href="/shopping-cart">Carrito de Compras</a></li>
+			<li id="linkAdmin" style="display: none;"><a href="/admin">Administración</a></li>
 		</ul>
 	</nav>
 
@@ -72,10 +73,10 @@
 						</div>
 						<div class="row uniform">
 							<div align="right" class="6u 12u$(xsmall)">
-								<a id="btnModificar" class="button special" >Modificar</a>
+								<a id="btnModificar" class="button special small" >Modificar</a>
 							</div>
 							<div align="left" class="6u$ 12u$(xsmall)">
-								<a id="btnLogout" class="button" >Salir</a>
+								<a id="btnLogout" class="button small" >Salir</a>
 							</div>
 						</div>
 					</form>
@@ -130,6 +131,7 @@
 		const linkProfile = document.querySelector('#linkProfile');
 		const linkShoppingCart = document.querySelector('#linkShoppingCart');
 		const linkLogin = document.querySelector('#linkLogin');
+		const linkAdmin = document.querySelector('#linkAdmin');
 		const btnLogout = document.querySelector('#btnLogout');
 		const inputEmail = document.querySelector('#inputEmail');
 		const inputName = document.querySelector('#inputName');
@@ -291,6 +293,19 @@
 		}
 
 		rellenarCampos();
+
+		const usuario = JSON.parse( session );
+
+		if ( usuario ) {
+
+			if ( usuario.rol == 'ADMIN_ROLE' ) {
+
+				linkAdmin.style.display = '';
+
+			}
+
+		}
+
 	</script>
 
 	

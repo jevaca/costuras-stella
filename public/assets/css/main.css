@@ -4429,3 +4429,34 @@
 			}
 
 		}
+
+.modal-container {
+	display: flex;
+	opacity: 0;
+	background-color: rgba(0, 0, 0, 0.3);
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	pointer-events: none;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	color: black;
+}
+
+.modal {
+	background-color: white;
+	width: 600px;
+	max-width: 100%;
+	padding: 30px 50px;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(122, 118, 118, 0.966);
+	text-align: center;
+
+}
+
+.show {
+	pointer-events: auto;
+	opacity: 1;
+}

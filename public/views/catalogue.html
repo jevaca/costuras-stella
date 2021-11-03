@@ -23,6 +23,7 @@
 			<li id="linkLogin"><a href="/login">Ingresar</a></li>
 			<li id="linkProfile"><a href="/profile">Perfil</a></li>
 			<li id="linkShoppingCart"><a href="/shopping-cart">Carrito de Compras</a></li>
+			<li id="linkAdmin" style="display: none;"><a href="/admin">Administración</a></li>
 		</ul>
 	</nav>
 
@@ -32,7 +33,7 @@
 				<header>
 					<h2 align="center">Nuestro Catálogo</h2>
 				</header>
-				<div class="select-wrapper text-white mt-5">
+				<!-- <div class="select-wrapper text-white mt-5">
 					<select name="category" id="category" class="bg-dark">
 						<option value="">- Category -</option>
 						<option value="1">Manufacturing</option>
@@ -40,7 +41,7 @@
 						<option value="1">Administration</option>
 						<option value="1">Human Resources</option>
 					</select>
-				</div>
+				</div> -->
 				<div align="center" class="row">
 
 					<div id="divCards" class="row row-cols-1 row-cols-md-3 g-4 ms-1">
@@ -101,8 +102,9 @@
 		const linkProfile = document.querySelector('#linkProfile');
 		const linkShoppingCart = document.querySelector('#linkShoppingCart');
 		const linkLogin = document.querySelector('#linkLogin');
+		const linkAdmin = document.querySelector('#linkAdmin');
 
-		const session = localStorage.getItem('JWT-costuras-stella');
+		const session = localStorage.getItem('user-costuras-stella');
 
 		let totalProductos;
 		let arrProductos;
@@ -215,6 +217,17 @@
 
 		cargarCompontes();
 
+		const usuario = JSON.parse( session );
+
+		if ( usuario ) {
+
+			if ( usuario.rol == 'ADMIN_ROLE' ) {
+
+				linkAdmin.style.display = '';
+
+			}
+
+		}
 
 	</script>
 
